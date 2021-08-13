@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/DetectionFragment">
+
+    <fragment
+        android:id="@+id/DetectionFragment"
+        android:name="com.tsng.applistdetector.ui.DetectionFragment"
+        tools:layout="@layout/fragment_detection">
+
+        <!--
+        <action
+            android:id="@+id/action_DetectionFragment_to_SettingsFragment"
+            app:destination="@id/SecondFragment" />
+        -->
+    </fragment>
+</navigation>
