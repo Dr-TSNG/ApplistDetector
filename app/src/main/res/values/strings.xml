@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Applist Detector</string>
 
+    <string name="found">Found</string>
+    <string name="not_found">Not found</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="suspicious">Suspicious</string>
 </resources>

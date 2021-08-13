@@ -4,7 +4,6 @@
     <color name="debug">#000000</color>
     <color name="info">#154A74</color>
     <color name="error">#FF0000</color>
-    <color name="service_off">#666600</color>
     <color name="colorPrimary">#336699</color>
     <color name="colorPrimaryDark">#154A74</color>
     <color name="colorSecondary">#009688</color>
