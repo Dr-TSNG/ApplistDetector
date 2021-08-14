@@ -1,4 +1,4 @@
-package com.tsng.applistdetector.ui
+package com.tsng.applistdetector.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -7,7 +7,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
@@ -15,21 +14,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+
+object DropDown {
+    enum class Status {
+        Disabled, Loading, InitiallyOpened, InitiallyClosed
+    }
+}
 
 @ExperimentalAnimationApi
 @Composable
 fun DropDown(
-    text: String,
     modifier: Modifier = Modifier,
-    initiallyOpened: Boolean = false,
+    status: DropDown.Status = DropDown.Status.InitiallyOpened,
+    color: Color,
+    title: String,
+    subtitle: String? = null,
+    extraText: String? = null,
     content: @Composable () -> Unit
 ) {
+    val isAvailable = status == DropDown.Status.InitiallyOpened || status == DropDown.Status.InitiallyClosed
     var isOpen by remember {
-        mutableStateOf(initiallyOpened)
+        mutableStateOf(status == DropDown.Status.InitiallyOpened)
     }
     val alpha = animateFloatAsState(
         targetValue = if (isOpen) 1f else 0f,
@@ -40,21 +49,28 @@ fun DropDown(
         animationSpec = tween(durationMillis = 300)
     )
     Column(modifier = modifier.fillMaxWidth()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        TitleBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { isOpen = !isOpen }
-        ) {
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = null,
-                modifier = Modifier
-                    .scale(1f, if (isOpen) -1f else 1f)
-                    .size(26.dp)
-            )
-            Text(text = text, fontSize = 20.sp)
-        }
+                .clickable(enabled = isAvailable) { isOpen = !isOpen },
+            color = color,
+            title = title,
+            subtitle = subtitle,
+            extraText = extraText,
+            sideIcon = when (status) {
+                DropDown.Status.Disabled -> null
+                DropDown.Status.Loading -> TitleBar.loading
+                else -> {
+                    {
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = null,
+                            modifier = TitleBar.defaultModifier.scale(1f, if (isOpen) -1f else 1f)
+                        )
+                    }
+                }
+            }
+        )
         AnimatedVisibility(visible = isOpen) {
             Spacer(modifier = Modifier.height(10.dp))
             Box(

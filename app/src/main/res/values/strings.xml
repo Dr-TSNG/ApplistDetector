@@ -5,4 +5,8 @@
     <string name="not_found">Not found</string>
     <string name="permission_denied">Permission denied</string>
     <string name="suspicious">Suspicious</string>
+
+    <string name="waiting">Waiting</string>
+    <string name="running">Running</string>
+    <string name="completed">Completed</string>
 </resources>
