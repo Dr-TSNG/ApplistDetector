@@ -36,7 +36,9 @@ class MainActivity : AppCompatActivity() {
         PMCommand,
         PMGetInstalledPackages,
         PMGetInstalledApplications,
-        PMGetPackagesHoldingPermissions
+        PMGetPackagesHoldingPermissions,
+        PMQueryIntentActivities,
+        PMGetPackageUid
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,17 +85,10 @@ class MainActivity : AppCompatActivity() {
                             data[i] = TagData(FoldLayout.Status.Loading, mutableListOf())
                         }
 
-                        val list = mutableListOf<Pair<String, IDetector.Results>>()
-
-                        when (detectors[i].name) {
-                            else -> {
-                                for (packageName in detectionAppList)
-                                    list.add(Pair(packageName, detectors[i].runDetection(packageName)))
-                            }
-                        }
+                        detectors[i].execute()
 
                         runOnUiThread {
-                            data[i] = TagData(FoldLayout.Status.Completed, list)
+                            data[i] = TagData(FoldLayout.Status.Completed, detectors[i].results)
                         }
                     }
                 }

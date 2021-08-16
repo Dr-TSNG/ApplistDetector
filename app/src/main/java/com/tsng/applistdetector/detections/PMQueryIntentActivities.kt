@@ -1,19 +1,21 @@
 package com.tsng.applistdetector.detections
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import com.tsng.applistdetector.MyApplication.Companion.appContext
 import com.tsng.applistdetector.MyApplication.Companion.detectionAppList
 
-object PMGetInstalledApplications : IDetector() {
-
-    override val name = "pm getInstalledApplications"
+object PMQueryIntentActivities : IDetector() {
+    override val name = "pm queryIntentActivities"
 
     override fun execute() {
         results.clear()
         var status: Results? = null
         val packages = mutableSetOf<String>()
 
-        for (pkg in appContext.packageManager.getInstalledApplications(0))
-            packages.add(pkg.packageName)
+        val intent = Intent(Intent.ACTION_MAIN)
+        for (pkg in appContext.packageManager.queryIntentActivities(intent, PackageManager.MATCH_ALL))
+            packages.add(pkg.activityInfo.packageName)
         if (packages.size <= 1) status = Results.SUSPICIOUS
 
         for (packageName in detectionAppList) {

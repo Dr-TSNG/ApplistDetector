@@ -1,8 +1,6 @@
 package com.tsng.applistdetector.detections
 
-import com.tsng.applistdetector.MyApplication.Companion.detectionAppList
-
-interface IDetector {
+abstract class IDetector {
     companion object {
         val basicAppList = listOf(
             "com.topjohnwu.magisk",
@@ -18,9 +16,8 @@ interface IDetector {
         NOT_FOUND, PERMISSION_DENIED, SUSPICIOUS, FOUND
     }
 
-    val name: String
-    var status: Results?
-    var listGenerated: Set<String>?
+    val results = mutableListOf<Pair<String, Results>>()
 
-    fun runDetection(packageName: String): Results
+    abstract val name: String
+    abstract fun execute()
 }

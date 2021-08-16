@@ -1,27 +1,28 @@
 package com.tsng.applistdetector.detections
 
 import com.tsng.applistdetector.MyApplication.Companion.appContext
-import com.tsng.applistdetector.detections.IDetector.Results
+import com.tsng.applistdetector.MyApplication.Companion.detectionAppList
 
-object PMGetInstalledPackages : IDetector {
+object PMGetInstalledPackages : IDetector() {
 
     override val name = "pm getInstalledPackages"
-    override var status: Results? = null
-    override var listGenerated: Set<String>? = null
 
-    override fun runDetection(packageName: String): Results {
-        if (listGenerated == null) generateList()
-        return if (listGenerated!!.contains(packageName)) Results.FOUND else Results.NOT_FOUND
-    }
-
-    private fun generateList() {
-        status = null
+    override fun execute() {
+        results.clear()
+        var status: Results? = null
         val packages = mutableSetOf<String>()
 
         for (pkg in appContext.packageManager.getInstalledPackages(0))
             packages.add(pkg.packageName)
-
         if (packages.size <= 1) status = Results.SUSPICIOUS
-        listGenerated = packages
+
+        for (packageName in detectionAppList) {
+            val result = when {
+                status != null -> status
+                packages.contains(packageName) -> Results.FOUND
+                else -> Results.NOT_FOUND
+            }
+            results.add(Pair(packageName, result))
+        }
     }
 }
