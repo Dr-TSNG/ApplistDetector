@@ -23,13 +23,4 @@ interface IDetector {
     var listGenerated: Set<String>?
 
     fun runDetection(packageName: String): Results
-
-    fun detect(): Results {
-        var result = Results.NOT_FOUND
-        for (packageName in detectionAppList) {
-            val tmp = runDetection(packageName)
-            if (result < tmp) result = tmp
-        }
-        return result
-    }
 }

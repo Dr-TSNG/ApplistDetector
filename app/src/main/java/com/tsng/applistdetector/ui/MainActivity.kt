@@ -6,11 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,19 +21,22 @@ import com.tsng.applistdetector.R
 import com.tsng.applistdetector.detections.*
 import com.tsng.applistdetector.ui.components.FoldLayout
 import com.tsng.applistdetector.ui.theme.AppTheme
+import kotlin.concurrent.thread
 
 
 @ExperimentalAnimationApi
 class MainActivity : AppCompatActivity() {
 
-    private val categories = listOf(
-        "API Requests" to listOf(
-            PMCommand,
-            PMGetInstalledPackages,
-            PMGetInstalledApplications,
-            PMGetPackagesHoldingPermissions
-        ),
-        "Suspicious Apps" to listOf()
+    class TagData(
+        var status: FoldLayout.Status,
+        var targets: MutableList<Pair<String, IDetector.Results>>
+    )
+
+    private val detectors = listOf(
+        PMCommand,
+        PMGetInstalledPackages,
+        PMGetInstalledApplications,
+        PMGetPackagesHoldingPermissions
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,15 +45,12 @@ class MainActivity : AppCompatActivity() {
             getPreferences(MODE_PRIVATE).getStringSet("appList", null)?.toList() ?: IDetector.basicAppList
         setContent {
             AppTheme {
-                val data by remember {
-                    val tmp = mutableListOf<MutableList<Pair<String, IDetector.Results>>>()
-                    for (i in categories.indices) {
-                        tmp.add(mutableListOf())
-                        for (detector in categories[i].second) {
-                            tmp[i].add(Pair(detector.name, IDetector.Results.NOT_FOUND))
-                        }
-                    }
-                    mutableStateOf(tmp)
+                val data = remember {
+                    mutableStateListOf<TagData>()
+                }
+                for (detector in detectors) {
+                    val tagData = TagData(FoldLayout.Status.NotStarted, mutableListOf())
+                    data.add(tagData)
                 }
 
                 Column {
@@ -64,13 +64,36 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     )
-                    Column(modifier = Modifier.padding(horizontal = 10.dp)) {
-                        for (i in categories.indices) {
-                            FoldLayout(
-                                status = FoldLayout.Status.NotStarted,
-                                title = categories[i].first,
-                                list = data[i]
-                            )
+                    LazyColumn(modifier = Modifier.padding(horizontal = 10.dp)) {
+                        for (i in detectors.indices) {
+                            item {
+                                FoldLayout(
+                                    status = data[i].status,
+                                    title = detectors[i].name,
+                                    list = data[i].targets
+                                )
+                            }
+                        }
+                    }
+                }
+
+                thread {
+                    for (i in detectors.indices) {
+                        runOnUiThread {
+                            data[i] = TagData(FoldLayout.Status.Loading, mutableListOf())
+                        }
+
+                        val list = mutableListOf<Pair<String, IDetector.Results>>()
+
+                        when (detectors[i].name) {
+                            else -> {
+                                for (packageName in detectionAppList)
+                                    list.add(Pair(packageName, detectors[i].runDetection(packageName)))
+                            }
+                        }
+
+                        runOnUiThread {
+                            data[i] = TagData(FoldLayout.Status.Completed, list)
                         }
                     }
                 }

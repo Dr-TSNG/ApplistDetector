@@ -1,10 +1,9 @@
 package com.tsng.applistdetector.ui.components
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -52,9 +51,9 @@ fun FoldLayout(status: FoldLayout.Status, title: String, list: List<Pair<String,
         subtitle = subtitle,
         status = dropBarStatus
     ) {
-        LazyColumn {
-            items(list) {
-                StatusLayout(name = it.first, status = it.second)
+        Column {
+            for (item in list) {
+                StatusLayout(name = item.first, status = item.second)
             }
         }
     }
