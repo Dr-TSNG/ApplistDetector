@@ -24,25 +24,28 @@ object FoldLayout {
 @ExperimentalAnimationApi
 @Composable
 fun FoldLayout(status: FoldLayout.Status, title: String, list: List<Pair<String, IDetector.Results>>) {
+    var result = IDetector.Results.NOT_FOUND
+    list.forEach { if (result < it.second) result = it.second }
+
+    val color =
+        if (status == FoldLayout.Status.Completed) resultColor(result)
+        else Color.Black
+
     val subtitle = when (status) {
         FoldLayout.Status.NotStarted -> stringResource(id = R.string.waiting)
         FoldLayout.Status.Loading -> stringResource(id = R.string.running)
-        FoldLayout.Status.Completed -> stringResource(id = R.string.completed)
+        FoldLayout.Status.Completed -> when (result) {
+            IDetector.Results.FOUND -> stringResource(id = R.string.found)
+            IDetector.Results.NOT_FOUND -> stringResource(id = R.string.not_found)
+            IDetector.Results.PERMISSION_DENIED -> stringResource(id = R.string.permission_denied)
+            IDetector.Results.SUSPICIOUS -> stringResource(id = R.string.suspicious)
+        }
     }
+
     val dropBarStatus = when (status) {
         FoldLayout.Status.NotStarted -> DropDown.Status.Disabled
         FoldLayout.Status.Loading -> DropDown.Status.Loading
-        FoldLayout.Status.Completed -> DropDown.Status.InitiallyOpened
-    }
-    var color =
-        if (status == FoldLayout.Status.Completed)
-            colorResource(id = android.R.color.holo_green_dark)
-        else Color.Black
-    for (item in list) {
-        if (item.second == IDetector.Results.FOUND)
-            color = Color.Red
-        if (color != Color.Red && item.second == IDetector.Results.SUSPICIOUS)
-            color = colorResource(id = android.R.color.holo_orange_dark)
+        FoldLayout.Status.Completed -> DropDown.Status.InitiallyClosed
     }
 
     DropDown(
@@ -53,21 +56,16 @@ fun FoldLayout(status: FoldLayout.Status, title: String, list: List<Pair<String,
     ) {
         Column {
             for (item in list) {
-                StatusLayout(name = item.first, status = item.second)
+                StatusLayout(name = item.first, result = item.second)
             }
         }
     }
 }
 
 @Composable
-private fun StatusLayout(name: String, status: IDetector.Results) {
-    val color = when (status) {
-        IDetector.Results.FOUND -> Color.Red
-        IDetector.Results.NOT_FOUND -> colorResource(id = android.R.color.holo_green_dark)
-        IDetector.Results.PERMISSION_DENIED -> Color.Black
-        IDetector.Results.SUSPICIOUS -> colorResource(id = android.R.color.holo_orange_dark)
-    }
-    val result = when (status) {
+private fun StatusLayout(name: String, result: IDetector.Results) {
+    val color = resultColor(result)
+    val resultText = when (result) {
         IDetector.Results.FOUND -> "🔴 " + stringResource(id = R.string.found)
         IDetector.Results.NOT_FOUND -> "🟢 " + stringResource(id = R.string.not_found)
         IDetector.Results.PERMISSION_DENIED -> "⚫ " + stringResource(id = R.string.permission_denied)
@@ -75,6 +73,16 @@ private fun StatusLayout(name: String, status: IDetector.Results) {
     }
     Row {
         Text(text = name, modifier = Modifier.width(200.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(text = result, color = color)
+        Text(text = resultText, color = color)
+    }
+}
+
+@Composable
+private fun resultColor(result: IDetector.Results): Color {
+    return when (result) {
+        IDetector.Results.NOT_FOUND -> colorResource(id = android.R.color.holo_green_dark)
+        IDetector.Results.PERMISSION_DENIED -> Color.Black
+        IDetector.Results.SUSPICIOUS -> colorResource(id = android.R.color.holo_orange_dark)
+        IDetector.Results.FOUND -> Color.Red
     }
 }

@@ -10,7 +10,6 @@ object PMGetPackagesHoldingPermissions : IDetector() {
 
     override fun execute() {
         results.clear()
-        var status: Results? = null
         val packages = mutableSetOf<String>()
 
         val permissions = mutableListOf<String>()
@@ -22,14 +21,11 @@ object PMGetPackagesHoldingPermissions : IDetector() {
         }
         for (pkg in appContext.packageManager.getPackagesHoldingPermissions(permissions.toTypedArray(), 0))
             packages.add(pkg.packageName)
-        if (packages.size <= 1) status = Results.SUSPICIOUS
 
         for (packageName in detectionAppList) {
-            val result = when {
-                status != null -> status
-                packages.contains(packageName) -> Results.FOUND
-                else -> Results.NOT_FOUND
-            }
+            val result =
+                if (packages.contains(packageName)) Results.FOUND
+                else Results.NOT_FOUND
             results.add(Pair(packageName, result))
         }
     }

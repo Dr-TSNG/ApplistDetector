@@ -8,5 +8,4 @@
 
     <string name="waiting">Waiting</string>
     <string name="running">Running</string>
-    <string name="completed">Completed</string>
 </resources>

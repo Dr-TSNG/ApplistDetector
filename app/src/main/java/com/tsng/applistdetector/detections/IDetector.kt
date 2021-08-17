@@ -7,8 +7,7 @@ abstract class IDetector {
             "de.robv.android.xposed.installer",
             "org.meowcat.edxposed.manager",
             "org.lsposed.manager",
-            "me.weishu.exp",
-            "moe.shizuku.redirectstorage"
+            "me.weishu.exp"
         )
     }
 

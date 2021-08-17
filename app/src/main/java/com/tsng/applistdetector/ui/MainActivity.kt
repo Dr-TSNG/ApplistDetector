@@ -38,7 +38,9 @@ class MainActivity : AppCompatActivity() {
         PMGetInstalledApplications,
         PMGetPackagesHoldingPermissions,
         PMQueryIntentActivities,
-        PMGetPackageUid
+        PMGetPackageUid,
+        FileDetections(useSyscall = false),
+        FileDetections(useSyscall = true)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

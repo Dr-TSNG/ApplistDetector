@@ -13,6 +13,7 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        System.loadLibrary("native")
         appContext = applicationContext
     }
 }
