@@ -40,7 +40,9 @@ class MainActivity : AppCompatActivity() {
         PMQueryIntentActivities,
         PMGetPackageUid,
         FileDetections(useSyscall = false),
-        FileDetections(useSyscall = true)
+        FileDetections(useSyscall = true),
+        RandomPackageName,
+        XposedModules
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

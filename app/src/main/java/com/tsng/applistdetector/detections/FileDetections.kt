@@ -8,6 +8,8 @@ class FileDetections(private val useSyscall: Boolean) : IDetector() {
 
     @SuppressLint("SdCardPath")
     override fun execute() {
+        results.clear()
+
         for (packageName in detectionAppList) {
             val res = listOf(
                 detect("/data/data/$packageName", useSyscall),

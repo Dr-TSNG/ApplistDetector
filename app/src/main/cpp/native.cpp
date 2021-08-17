@@ -22,7 +22,7 @@ static void update(Result out) {
 }
 
 static void syscall_detect(int call) {
-    update(syscall_failed ? PERMISSION_DENIED : (call ? FOUND : NOT_FOUND));
+    update(syscall_failed ? PERMISSION_DENIED : (call == 0 ? FOUND : NOT_FOUND));
     syscall_failed = false;
 }
 
