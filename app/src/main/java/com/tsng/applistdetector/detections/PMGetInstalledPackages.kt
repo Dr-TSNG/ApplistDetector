@@ -14,7 +14,8 @@ object PMGetInstalledPackages : IDetector() {
 
         for (pkg in appContext.packageManager.getInstalledPackages(0))
             packages.add(pkg.packageName)
-        if (packages.size <= 1) status = Results.SUSPICIOUS
+        if (packages.size == 0) status = Results.PERMISSION_DENIED
+        if (packages.size == 1) status = Results.SUSPICIOUS
 
         for (packageName in detectionAppList) {
             val result = when {

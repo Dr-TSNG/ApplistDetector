@@ -16,7 +16,8 @@ object PMQueryIntentActivities : IDetector() {
         val intent = Intent(Intent.ACTION_MAIN)
         for (pkg in appContext.packageManager.queryIntentActivities(intent, PackageManager.MATCH_ALL))
             packages.add(pkg.activityInfo.packageName)
-        if (packages.size <= 1) status = Results.SUSPICIOUS
+        if (packages.size == 0) status = Results.PERMISSION_DENIED
+        if (packages.size == 1) status = Results.SUSPICIOUS
 
         for (packageName in detectionAppList) {
             val result = when {
