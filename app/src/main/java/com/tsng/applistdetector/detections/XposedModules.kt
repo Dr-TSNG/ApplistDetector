@@ -6,7 +6,7 @@ import com.tsng.applistdetector.MyApplication.Companion.appContext
 
 object XposedModules : IDetector() {
 
-    override val name = "find xposed modules"
+    override val name = "xposed modules"
 
     override fun execute() {
         results.clear()
