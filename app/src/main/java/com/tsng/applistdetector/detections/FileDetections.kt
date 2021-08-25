@@ -4,6 +4,11 @@ import android.annotation.SuppressLint
 import com.tsng.applistdetector.MyApplication.Companion.detectionAppList
 
 class FileDetections(private val useSyscall: Boolean) : IDetector() {
+    companion object {
+        @JvmStatic
+        external fun detect(path: String, useSyscall: Boolean): Results
+    }
+
     override val name = (if (useSyscall) "syscall" else "libc") + " file detection"
 
     @SuppressLint("SdCardPath")
@@ -22,6 +27,4 @@ class FileDetections(private val useSyscall: Boolean) : IDetector() {
             results.add(Pair(packageName, result))
         }
     }
-
-    private external fun detect(path: String, useSyscall: Boolean): Results
 }

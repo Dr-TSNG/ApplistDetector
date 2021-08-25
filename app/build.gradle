@@ -11,8 +11,8 @@ android {
         applicationId "com.tsng.applistdetector"
         minSdk 23
         targetSdk 31
-        versionCode 6
-        versionName "1.2.0.2"
+        versionCode 67
+        versionName "1.2.1"
 
         externalNativeBuild.cmake {
             cppFlags "-std=c++20"
