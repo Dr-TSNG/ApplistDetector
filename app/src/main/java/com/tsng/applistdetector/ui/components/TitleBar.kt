@@ -43,21 +43,23 @@ fun TitleBar(
         val typography = MaterialTheme.typography
         Spacer(Modifier.size(4.dp, 36.dp).background(color = color))
         Spacer(Modifier.width(12.dp))
-        if (subtitle != null) {
-            Column(Modifier) {
-                Text(text = title, style = typography.body1)
-                CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                    Text(text = subtitle, style = typography.subtitle1)
+        Surface(modifier = Modifier.background(color = Color.Transparent)) {
+            if (subtitle != null) {
+                Column(Modifier) {
+                    Text(text = title, style = typography.body1)
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                        Text(text = subtitle, style = typography.subtitle1)
+                    }
                 }
+            } else Text(text = title, style = typography.h6)
+            Spacer(Modifier.weight(1f))
+            if (extraText != null) {
+                Text(
+                    text = extraText,
+                    style = typography.h6,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
             }
-        } else Text(text = title, style = typography.h6)
-        Spacer(Modifier.weight(1f))
-        if (extraText != null) {
-            Text(
-                text = extraText,
-                style = typography.h6,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
         }
         Spacer(Modifier.width(16.dp))
         sideIcon?.let {
