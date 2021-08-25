@@ -73,7 +73,7 @@ private fun StatusLayout(name: String, result: IDetector.Results) {
         IDetector.Results.SUSPICIOUS -> "🟡 " + stringResource(id = R.string.suspicious)
     }
     Surface {
-    Row {
+        Row {
             Text(text = name, modifier = Modifier.width(200.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(text = resultText, color = color)
         }
