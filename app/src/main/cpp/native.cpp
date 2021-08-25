@@ -64,7 +64,20 @@ Java_com_tsng_applistdetector_detections_FileDetections_detect(JNIEnv *env, jobj
     return env->GetStaticObjectField(enum_class, id);
 }
 
+static int xposed_stat = NO_XPOSED;
+
 extern "C" JNIEXPORT jboolean JNICALL
 Java_com_tsng_applistdetector_detections_AbnormalEnvironment_xposedDetector(JNIEnv *env, jobject) {
-    return get_xposed_status(env, android_get_device_api_level()) != NO_XPOSED;
+    int res = get_xposed_status(env, android_get_device_api_level());
+    if (res > xposed_stat) xposed_stat = res;
+    return xposed_stat != NO_XPOSED;
+}
+
+jint JNI_OnLoad(JavaVM *jvm, void *) {
+    JNIEnv *env;
+    if (jvm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) {
+        return JNI_ERR;
+    }
+    xposed_stat = get_xposed_status(env, android_get_device_api_level());
+    return JNI_VERSION_1_6;
 }

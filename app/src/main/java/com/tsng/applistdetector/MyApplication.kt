@@ -11,9 +11,12 @@ class MyApplication : Application() {
         lateinit var detectionAppList: List<String>
     }
 
+    init {
+        System.loadLibrary("native")
+    }
+
     override fun onCreate() {
         super.onCreate()
-        System.loadLibrary("native")
         appContext = applicationContext
     }
 }
