@@ -1,8 +1,6 @@
 package com.tsng.applistdetector.detections
 
-import android.app.admin.DevicePolicyManager
 import com.tsng.applistdetector.MyApplication.Companion.appContext
-
 
 object AbnormalEnvironment : IDetector() {
 
@@ -11,8 +9,7 @@ object AbnormalEnvironment : IDetector() {
     override fun execute() {
         results.clear()
         results.add(Pair("Xposed hooks", if (xposedDetector()) Results.FOUND else Results.NOT_FOUND))
-        results.add(Pair("Dual", detectDual()))
-        results.add(Pair("Work profile", detectWorkProfile()))
+        results.add(Pair("Dual / Work profile", detectDual()))
         results.add(Pair("XPrivacyLua", detectFile("/data/system/xlua")))
     }
 
@@ -28,12 +25,6 @@ object AbnormalEnvironment : IDetector() {
         return if (filesDir.startsWith("/data/user") && !filesDir.startsWith("/data/user/0/"))
             Results.SUSPICIOUS
         else Results.NOT_FOUND
-    }
-
-    private fun detectWorkProfile(): Results {
-        val devicePolicyManager = appContext.getSystemService(DevicePolicyManager::class.java)
-        val activeAdmins = devicePolicyManager.activeAdmins
-        return if (activeAdmins != null) Results.SUSPICIOUS else Results.NOT_FOUND
     }
 
     private external fun xposedDetector(): Boolean
