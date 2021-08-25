@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">应用列表检测器</string>
+    <string name="app_name">应用列表检测器 V%1$s</string>
 
     <string name="found">发现</string>
     <string name="not_found">未发现</string>

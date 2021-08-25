@@ -4,3 +4,6 @@ project("applistdetector")
 include_directories(external/linux_syscall_support)
 add_library(native SHARED native.cpp)
 target_link_libraries(native android log)
+
+find_package(xposeddetector REQUIRED CONFIG)
+target_link_libraries(native xposeddetector::xposed_detector)

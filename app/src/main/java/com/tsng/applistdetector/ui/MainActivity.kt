@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.tsng.applistdetector.BuildConfig
 import com.tsng.applistdetector.MyApplication.Companion.detectionAppList
 import com.tsng.applistdetector.R
 import com.tsng.applistdetector.detections.*
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     private val detectors = listOf(
+        AbnormalEnvironment,
         PMCommand,
         PMGetInstalledPackages,
         PMGetInstalledApplications,
@@ -62,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                 Column {
                     TopAppBar(
                         modifier = Modifier.padding(bottom = 4.dp),
-                        title = { Text(stringResource(id = R.string.app_name)) },
+                        title = { Text(stringResource(R.string.app_name, BuildConfig.VERSION_NAME)) },
                         navigationIcon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_launcher_foreground),

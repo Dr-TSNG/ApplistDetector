@@ -6,6 +6,8 @@
 #include <cstdio>
 #include <algorithm>
 
+#include "xposed-detector.h"
+
 bool syscall_failed;
 
 enum Result {
@@ -26,9 +28,8 @@ static void syscall_detect(int call) {
     syscall_failed = false;
 }
 
-extern "C"
-JNIEXPORT jobject JNICALL
-Java_com_tsng_applistdetector_detections_FileDetections_detect(JNIEnv *env, jobject thiz, jstring path, jboolean use_syscall) {
+extern "C" JNIEXPORT jobject JNICALL
+Java_com_tsng_applistdetector_detections_FileDetections_detect(JNIEnv *env, jobject, jstring path, jboolean use_syscall) {
     syscall_failed = false;
     result = NOT_FOUND;
     const char *cpath = env->GetStringUTFChars(path, nullptr);
@@ -61,4 +62,9 @@ Java_com_tsng_applistdetector_detections_FileDetections_detect(JNIEnv *env, jobj
     }
 
     return env->GetStaticObjectField(enum_class, id);
+}
+
+extern "C" JNIEXPORT jboolean JNICALL
+Java_com_tsng_applistdetector_detections_AbnormalEnvironment_xposedDetector(JNIEnv *env, jobject) {
+    return get_xposed_status(env, android_get_device_api_level()) != NO_XPOSED;
 }
