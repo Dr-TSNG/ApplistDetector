@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                 Column {
                     TopAppBar(
                         modifier = Modifier.padding(bottom = 4.dp),
-                        title = { Text(stringResource(R.string.app_name, BuildConfig.VERSION_NAME)) },
+                        title = { Text(stringResource(R.string.app_name) + " V" + BuildConfig.VERSION_NAME) },
                         navigationIcon = {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_launcher_foreground),

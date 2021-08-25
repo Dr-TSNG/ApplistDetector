@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Applist Detector V%1$s</string>
+    <string name="app_name">Applist Detector</string>
 
     <string name="found">Found</string>
     <string name="not_found">Not found</string>
