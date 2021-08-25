@@ -7,6 +7,7 @@ abstract class IDetector {
             "de.robv.android.xposed.installer",
             "org.meowcat.edxposed.manager",
             "org.lsposed.manager",
+            "top.canyie.dreamland.manager",
             "me.weishu.exp"
         )
     }
