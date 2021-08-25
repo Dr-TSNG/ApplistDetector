@@ -4,6 +4,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -71,9 +72,11 @@ private fun StatusLayout(name: String, result: IDetector.Results) {
         IDetector.Results.PERMISSION_DENIED -> "⚫ " + stringResource(id = R.string.permission_denied)
         IDetector.Results.SUSPICIOUS -> "🟡 " + stringResource(id = R.string.suspicious)
     }
+    Surface {
     Row {
-        Text(text = name, modifier = Modifier.width(200.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(text = resultText, color = color)
+            Text(text = name, modifier = Modifier.width(200.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = resultText, color = color)
+        }
     }
 }
 
