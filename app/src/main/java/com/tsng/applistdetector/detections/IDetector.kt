@@ -9,7 +9,8 @@ abstract class IDetector {
             "org.lsposed.manager",
             "top.canyie.dreamland.manager",
             "me.weishu.exp",
-            "com.android.vendinf"
+            "com.android.vendinf",
+            "moe.shizuku.redirectstorage"
         )
     }
 

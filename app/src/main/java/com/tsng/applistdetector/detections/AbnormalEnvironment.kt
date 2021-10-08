@@ -10,6 +10,7 @@ object AbnormalEnvironment : IDetector() {
         results.clear()
         results.add(Pair("Xposed hooks", if (xposedDetector()) Results.FOUND else Results.NOT_FOUND))
         results.add(Pair("Dual / Work profile", detectDual()))
+        results.add(Pair("HMA (old version)", detectFile("/data/misc/hide_my_applist")))
         results.add(Pair("XPrivacyLua", detectFile("/data/system/xlua")))
         results.add(Pair("Thanox", detectFile("/data/system/thanos")))
     }
