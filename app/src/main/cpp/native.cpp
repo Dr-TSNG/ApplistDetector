@@ -29,7 +29,7 @@ static void syscall_detect(int call) {
 }
 
 extern "C" JNIEXPORT jobject JNICALL
-Java_com_tsng_applistdetector_detections_FileDetections_detect(JNIEnv *env, jobject, jstring path, jboolean use_syscall) {
+Java_com_tsng_applistdetector_detections_FileDetections_detect(JNIEnv *env, jclass, jstring path, jboolean use_syscall) {
     syscall_failed = false;
     result = NOT_FOUND;
     const char *cpath = env->GetStringUTFChars(path, nullptr);
