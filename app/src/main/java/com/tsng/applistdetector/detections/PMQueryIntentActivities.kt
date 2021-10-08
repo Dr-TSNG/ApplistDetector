@@ -6,6 +6,7 @@ import com.tsng.applistdetector.MyApplication.Companion.appContext
 import com.tsng.applistdetector.MyApplication.Companion.detectionAppList
 
 object PMQueryIntentActivities : IDetector() {
+
     override val name = "pm queryIntentActivities"
 
     override fun execute() {

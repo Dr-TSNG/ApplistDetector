@@ -3,9 +3,9 @@ package com.tsng.applistdetector.detections
 import com.tsng.applistdetector.MyApplication.Companion.appContext
 import com.tsng.applistdetector.MyApplication.Companion.detectionAppList
 
-object PMGetInstalledPackages : IDetector() {
+object PMConventionalAPIs : IDetector() {
 
-    override val name = "pm getInstalledPackages"
+    override val name = "pm conventional APIs"
 
     override fun execute() {
         results.clear()
@@ -13,6 +13,8 @@ object PMGetInstalledPackages : IDetector() {
         val packages = mutableSetOf<String>()
 
         for (pkg in appContext.packageManager.getInstalledPackages(0))
+            packages.add(pkg.packageName)
+        for (pkg in appContext.packageManager.getInstalledApplications(0))
             packages.add(pkg.packageName)
         if (packages.size == 0) status = Results.PERMISSION_DENIED
         if (packages.size == 1) status = Results.SUSPICIOUS

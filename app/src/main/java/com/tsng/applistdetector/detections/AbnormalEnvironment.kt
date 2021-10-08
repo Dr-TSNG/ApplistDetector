@@ -11,6 +11,7 @@ object AbnormalEnvironment : IDetector() {
         results.add(Pair("Xposed hooks", if (xposedDetector()) Results.FOUND else Results.NOT_FOUND))
         results.add(Pair("Dual / Work profile", detectDual()))
         results.add(Pair("XPrivacyLua", detectFile("/data/system/xlua")))
+        results.add(Pair("Thanox", detectFile("/data/system/thanos")))
     }
 
     private fun detectFile(path: String): Results {

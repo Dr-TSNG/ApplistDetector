@@ -38,11 +38,10 @@ class MainActivity : AppCompatActivity() {
     private val detectors = listOf(
         AbnormalEnvironment,
         PMCommand,
-        PMGetInstalledPackages,
-        PMGetInstalledApplications,
+        PMConventionalAPIs,
+        PMSundryAPIs,
         PMGetPackagesHoldingPermissions,
         PMQueryIntentActivities,
-        PMGetPackageUid,
         FileDetections(useSyscall = false),
         FileDetections(useSyscall = true),
         RandomPackageName,

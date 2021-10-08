@@ -8,7 +8,8 @@ abstract class IDetector {
             "org.meowcat.edxposed.manager",
             "org.lsposed.manager",
             "top.canyie.dreamland.manager",
-            "me.weishu.exp"
+            "me.weishu.exp",
+            "com.android.vendinf"
         )
     }
 
