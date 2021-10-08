@@ -16,10 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.ads.MobileAds
 import com.tsng.applistdetector.BuildConfig
 import com.tsng.applistdetector.MyApplication.Companion.detectionAppList
 import com.tsng.applistdetector.R
 import com.tsng.applistdetector.detections.*
+import com.tsng.applistdetector.ui.components.AdvertView
 import com.tsng.applistdetector.ui.components.FoldLayout
 import com.tsng.applistdetector.ui.theme.AppTheme
 import kotlin.concurrent.thread
@@ -49,8 +51,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        detectionAppList =
-            getPreferences(MODE_PRIVATE).getStringSet("appList", null)?.toList() ?: IDetector.basicAppList
+        MobileAds.initialize(this)
+        detectionAppList = getPreferences(MODE_PRIVATE).getStringSet("appList", null)?.toList() ?: IDetector.basicAppList
         setContent {
             AppTheme {
                 val data = remember {
@@ -72,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     )
+                    AdvertView()
                     LazyColumn(modifier = Modifier.padding(horizontal = 10.dp)) {
                         for (i in detectors.indices) {
                             item {
