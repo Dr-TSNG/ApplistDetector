@@ -19,18 +19,21 @@ object RandomPackageName : IDetector() {
         val pm = appContext.packageManager
         val intent = Intent(Intent.ACTION_MAIN)
         for (pkg in pm.queryIntentActivities(intent, PackageManager.MATCH_ALL)) {
-            val pInfo = pm.getPackageInfo(pkg.activityInfo.packageName, 0)
-            val aInfo = pInfo.applicationInfo
-            if (aInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) continue
-            val apkFile = File(aInfo.sourceDir)
-            val apkSize = apkFile.length() / 1024
-            if (apkSize < 20 || apkSize > 30) continue
+            try {
+                val pInfo = pm.getPackageInfo(pkg.activityInfo.packageName, 0)
+                val aInfo = pInfo.applicationInfo
+                if (aInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) continue
+                val apkFile = File(aInfo.sourceDir)
+                val apkSize = apkFile.length() / 1024
+                if (apkSize < 20 || apkSize > 30) continue
 
-            val zFile = ZFile.openReadOnly(apkFile)
-            val dex = zFile["classes.dex"]?.read() ?: continue
-            zFile.close()
+                val zFile = ZFile.openReadOnly(apkFile)
+                val dex = zFile["classes.dex"]?.read() ?: continue
+                zFile.close()
 
-            if (checkDex(dex)) results.add(Pair(pkg.activityInfo.packageName, Results.FOUND))
+                if (checkDex(dex)) results.add(Pair(pkg.activityInfo.packageName, Results.FOUND))
+            } catch (e: Exception) {
+            }
         }
     }
 
