@@ -31,8 +31,6 @@
 -keep class android.support.** { *; }
 #--------------------------------------------------------------------------
 
--keep class com.tsng.applistdetector.detections.IDetector$Results { *; }
-
 # Dontwarn
 -dontwarn org.bouncycastle.jsse.BCSSLParameters
 -dontwarn org.bouncycastle.jsse.BCSSLSocket
