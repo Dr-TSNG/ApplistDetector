@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "icu.nullptr.applistdetector"
+    namespace = "icu.nullptr.applistdetector.library"
     compileSdk = targetSdkVer
 
     buildFeatures {
@@ -28,6 +28,8 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            consumerProguardFiles("proguard-rules.pro")
         }
     }
 
