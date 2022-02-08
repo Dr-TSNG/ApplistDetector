@@ -61,7 +61,6 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.0.0-alpha04")
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.24.1-alpha")
     implementation("com.google.android.material:material:1.5.0")
 
     implementation("com.google.android.gms:play-services-ads:20.5.0")

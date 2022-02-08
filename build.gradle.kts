@@ -13,8 +13,18 @@ plugins {
     kotlin("android") version "1.6.10" apply false
 }
 
-val verCode by extra(12)
-var verName by extra("0.1")
+fun String.execute(currentWorkingDir: File = file("./")): String {
+    val byteOut = java.io.ByteArrayOutputStream()
+    exec {
+        workingDir = currentWorkingDir
+        commandLine = split("\\s".toRegex())
+        standardOutput = byteOut
+    }
+    return String(byteOut.toByteArray()).trim()
+}
+
+val verCode by extra("git rev-list HEAD --count".execute().toInt())
+var verName by extra("0.8")
 
 val minSdkVer by extra(23)
 val targetSdkVer by extra(32)

@@ -37,7 +37,8 @@ fun CheckCard(
             .padding(horizontal = 24.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(16.dp))
             .clickable(enabled = result != null) { expanded = !expanded },
-        color = MaterialTheme.colorScheme.primaryContainer
+        color = MaterialTheme.colorScheme.primaryContainer,
+        tonalElevation = 2.dp
     ) {
         Column(
             Modifier
