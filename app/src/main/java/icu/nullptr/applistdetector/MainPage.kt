@@ -16,6 +16,7 @@ import kotlinx.coroutines.*
 
 val basicAppList = listOf(
     "com.topjohnwu.magisk",
+    "io.github.vvb2060.magisk",
     "de.robv.android.xposed.installer",
     "org.meowcat.edxposed.manager",
     "org.lsposed.manager",
