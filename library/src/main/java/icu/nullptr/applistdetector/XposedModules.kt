@@ -11,6 +11,8 @@ class XposedModules(context: Context) : IDetector(context) {
 
     @SuppressLint("QueryPermissionsNeeded")
     override fun run(packages: Collection<String>?, detail: Detail?): Result {
+        if (packages != null) throw IllegalArgumentException("packages should be null")
+
         var result = Result.NOT_FOUND
         val pm = context.packageManager
         val intent = Intent(Intent.ACTION_MAIN)

@@ -24,7 +24,7 @@ fun String.execute(currentWorkingDir: File = file("./")): String {
 }
 
 val verCode by extra("git rev-list HEAD --count".execute().toInt())
-var verName by extra("2.0")
+var verName by extra("2.1")
 
 val minSdkVer by extra(23)
 val targetSdkVer by extra(32)
