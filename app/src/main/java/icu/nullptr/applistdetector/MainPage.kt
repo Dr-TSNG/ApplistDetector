@@ -9,6 +9,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import icu.nullptr.applistdetector.MyApplication.Companion.accList
+import icu.nullptr.applistdetector.MyApplication.Companion.accenable
 import icu.nullptr.applistdetector.MyApplication.Companion.appContext
 import icu.nullptr.applistdetector.component.CheckCard
 import icu.nullptr.applistdetector.component.IconHintCard
@@ -27,7 +29,8 @@ val basicAppList = listOf(
 )
 
 val snapShotList = mutableStateListOf<Triple<IDetector, IDetector.Result?, Detail?>>(
-    Triple(AbnormalEnvironment(appContext), null, null),
+    Triple(AbnormalEnvironment(appContext,false), null, null),
+    Triple(AbnormalEnvironment(appContext,true), null, null),
 
     Triple(PMCommand(appContext), null, null),
     Triple(PMConventionalAPIs(appContext), null, null),
@@ -38,7 +41,8 @@ val snapShotList = mutableStateListOf<Triple<IDetector, IDetector.Result?, Detai
     Triple(FileDetection(appContext, true), null, null),
 
     Triple(XposedModules(appContext), null, null),
-    Triple(MagiskRandomPackageName(appContext), null, null)
+    Triple(MagiskRandomPackageName(appContext), null, null),
+    Triple(Accessibility(appContext, accList = accList, accenable = accenable), null, null)
 )
 
 suspend fun runDetector(id: Int, packages: Collection<String>?) {
@@ -53,9 +57,11 @@ suspend fun runDetector(id: Int, packages: Collection<String>?) {
 fun MainPage() {
     LaunchedEffect(appContext) {
         runDetector(0, null)
-        for (i in 1..6) runDetector(i, basicAppList)
-        runDetector(7, null)
+        runDetector(1, null)
+        for (i in 2..7) runDetector(i, basicAppList)
         runDetector(8, null)
+        runDetector(9, null)
+        runDetector(10, null)
     }
 
     Column(

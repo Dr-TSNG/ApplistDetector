@@ -9,20 +9,29 @@ class XposedModules(context: Context) : IDetector(context) {
 
     override val name = "Xposed Modules"
 
-    @SuppressLint("QueryPermissionsNeeded")
+    @SuppressLint("QueryPermissions OR PMCAPermissions Needed")
     override fun run(packages: Collection<String>?, detail: Detail?): Result {
         if (packages != null) throw IllegalArgumentException("packages should be null")
 
         var result = Result.NOT_FOUND
         val pm = context.packageManager
-        val intent = Intent(Intent.ACTION_MAIN)
         val set = if (detail == null) null else mutableSetOf<Pair<String, Result>>()
-        for (pkg in pm.queryIntentActivities(intent, PackageManager.GET_META_DATA)) {
-            val aInfo = pkg.activityInfo.applicationInfo
-            if (aInfo.metaData?.get("xposedminversion") != null) {
-                val label = pm.getApplicationLabel(aInfo) as String
+        val intent = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+        for (pkg in intent) {
+            if (pkg.metaData?.get("xposedmodule") != null){
+                val label = pm.getApplicationLabel(pkg) as String
                 result = Result.FOUND
-                set?.add(label to Result.FOUND)
+                set?.add(label to Result.FOUND)}
+        }
+        if (set.isNullOrEmpty()){
+            val intent = pm.queryIntentActivities(Intent(Intent.ACTION_MAIN),PackageManager.GET_META_DATA)
+            for (pkg in intent) {
+                val ainfo=pkg.activityInfo.applicationInfo
+                if (ainfo.metaData?.get("xposedminversion") != null) {
+                    val label = pm.getApplicationLabel(ainfo) as String
+                    result = Result.FOUND
+                    set?.add(label to Result.FOUND)
+                }
             }
         }
         detail?.addAll(set!!)

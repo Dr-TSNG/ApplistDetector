@@ -1,8 +1,11 @@
 package icu.nullptr.applistdetector
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
+import android.view.accessibility.AccessibilityManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -21,7 +24,11 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
+import icu.nullptr.applistdetector.MyApplication.Companion.accList
+import icu.nullptr.applistdetector.MyApplication.Companion.accenable
+import icu.nullptr.applistdetector.MyApplication.Companion.appContext
 import icu.nullptr.applistdetector.theme.MyTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,6 +36,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkDisabled()
         setContent {
             MyTheme {
                 var showDialog by remember { mutableStateOf(false) }
@@ -101,4 +109,45 @@ private fun AboutDialog(onDismiss: () -> Unit) {
             }
         },
     )
+}
+
+private fun checkDisabled() {
+    accList = getFromAccessibilityManager()+getFromSettingsSecure()
+}
+
+private fun getFromAccessibilityManager(): List<String> {
+    val accessibilityManager =
+        ContextCompat.getSystemService(appContext, AccessibilityManager::class.java)
+            ?: error("unreachable")
+    val serviceList: List<AccessibilityServiceInfo> =
+        accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
+            ?: emptyList()
+    val nameList = serviceList.map {
+        appContext.packageManager.getApplicationLabel(it.resolveInfo.serviceInfo.applicationInfo)
+            .toString()
+    }.toMutableList()
+    if (accessibilityManager.isEnabled) {
+        nameList.add("AccessibilityManager.isEnabled")
+    }
+    if (accessibilityManager.isTouchExplorationEnabled) {
+        nameList.add("AccessibilityManager.isTouchExplorationEnabled")
+    }
+    return nameList
+}
+
+private fun getFromSettingsSecure():List<String> {
+    val settingValue= Settings.Secure.getString(
+        appContext.contentResolver,
+        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+    )
+    val nameList=if (settingValue.isNullOrEmpty()){
+        emptyList()
+    }else{
+        settingValue.split(':')
+    }.toMutableList()
+    val enabled = Settings.Secure.getInt(appContext.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED)
+    if (enabled != 0) {
+        accenable=true
+    }
+    return nameList
 }
