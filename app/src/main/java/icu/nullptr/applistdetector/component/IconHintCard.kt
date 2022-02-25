@@ -11,13 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import icu.nullptr.applistdetector.IDetector
+import icu.nullptr.applistdetector.MyApplication.Companion.checktext
+
 
 val resultMap = mapOf(
     null to (Icons.Filled.HourglassEmpty to "Pending"),
-    IDetector.Result.NOT_FOUND to (Icons.Filled.Done to "Not found"),
-    IDetector.Result.METHOD_UNAVAILABLE to (Icons.Filled.CodeOff to "Method unavailable"),
-    IDetector.Result.SUSPICIOUS to (Icons.Filled.Visibility to "Suspicious"),
-    IDetector.Result.FOUND to (Icons.Filled.Coronavirus to "Found")
+    IDetector.Result.NOT_FOUND to (Icons.Filled.Done to checktext.get(0)),
+    IDetector.Result.METHOD_UNAVAILABLE to (Icons.Filled.CodeOff to checktext.get(1)),
+    IDetector.Result.SUSPICIOUS to (Icons.Filled.Visibility to checktext.get(2)),
+    IDetector.Result.FOUND to (Icons.Filled.Coronavirus to checktext.get(3))
 )
 
 @Preview

@@ -6,9 +6,9 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 
-class PMCommand(context: Context) : IDetector(context) {
+class PMCommand(context: Context, override val name: String) : IDetector(context) {
 
-    override val name = "PM Command"
+    //override val name = "PM Command"
 
     override fun run(packages: Collection<String>?, detail: Detail?): Result {
         if (packages == null) throw IllegalArgumentException("packages should not be null")

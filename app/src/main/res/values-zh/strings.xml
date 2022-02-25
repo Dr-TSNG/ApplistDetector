@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">应用列表检测器</string>
+    <string name="about">关于</string>
+    <string name="authored">作者</string>
+    <string name="source">开源地址</string>
+    <string name="telegram">Telegram群组</string>
+    <string name="not_found">未发现</string>
+    <string name="found">发现</string>
+    <string name="method">被拒绝</string>
+    <string name="suspicious">可疑</string>
+    <string name="abnormal">环境检测</string>
+    <string name="filedet">文件检查</string>
+    <string name="pmc">PM 命令查询</string>
+    <string name="pmca">PM 常规Api查询</string>
+    <string name="pmsa">PM 混合API查询</string>
+    <string name="pmiq">PM 主界面查询</string>
+    <string name="xposed">Xposed 模块</string>
+    <string name="magisk">Magisk 随机包名检测</string>
+    <string name="accessibility">无障碍检查</string>
+</resources>

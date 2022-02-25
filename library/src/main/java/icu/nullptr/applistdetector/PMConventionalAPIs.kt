@@ -3,9 +3,9 @@ package icu.nullptr.applistdetector
 import android.annotation.SuppressLint
 import android.content.Context
 
-class PMConventionalAPIs(context: Context) : IDetector(context) {
+class PMConventionalAPIs(context: Context, override val name: String) : IDetector(context) {
 
-    override val name = "PM Conventional APIs"
+    //override val name = "PM Conventional APIs"
 
     @SuppressLint("QueryPermissionsNeeded")
     override fun run(packages: Collection<String>?, detail: Detail?): Result {

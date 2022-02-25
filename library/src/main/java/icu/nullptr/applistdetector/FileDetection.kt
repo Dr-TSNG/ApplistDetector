@@ -3,9 +3,9 @@ package icu.nullptr.applistdetector
 import android.annotation.SuppressLint
 import android.content.Context
 
-class FileDetection(context: Context, private val useSyscall: Boolean) : IDetector(context) {
+class FileDetection(context: Context, private val useSyscall: Boolean, override val name: String) : IDetector(context) {
 
-    override val name = if (useSyscall) "Syscall File Detection" else "Libc File Detection"
+    //override val name = if (useSyscall) "Syscall File Detection" else "Libc File Detection"
 
     companion object {
         @JvmStatic

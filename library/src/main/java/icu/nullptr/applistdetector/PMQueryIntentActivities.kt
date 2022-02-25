@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 
-class PMQueryIntentActivities(context: Context) : IDetector(context) {
+class PMQueryIntentActivities(context: Context, override val name: String) : IDetector(context) {
 
-    override val name = "PM Intent Queries"
+    //override val name = "PM Intent Queries"
 
     @SuppressLint("QueryPermissionsNeeded")
     override fun run(packages: Collection<String>?, detail: Detail?): Result {

@@ -2,9 +2,11 @@ package icu.nullptr.applistdetector
 
 import android.content.Context
 
-class AbnormalEnvironment(context: Context, private val subusybox: Boolean) : IDetector(context) {
+class AbnormalEnvironment(context: Context, private val subusybox: Boolean,
+                          override val name: String
+) : IDetector(context) {
 
-    override val name = if (subusybox) "SuBusybox File Detection" else "Abnormal Environment"
+    //override val name = if (subusybox) "SuBusybox File Detection" else "Abnormal Environment"
 
     private external fun detectXposed(): Boolean
 

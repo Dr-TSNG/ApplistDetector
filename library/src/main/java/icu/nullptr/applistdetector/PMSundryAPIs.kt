@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 
-class PMSundryAPIs(context: Context) : IDetector(context) {
+class PMSundryAPIs(context: Context, override val name: String) : IDetector(context) {
 
-    override val name = "PM Sundry APIs"
+    //override val name = "PM Sundry APIs"
 
     private fun getPackageUid(name: String): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

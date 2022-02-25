@@ -17,9 +17,9 @@ private val permissionList = arrayOf(
     "android.permission.QUERY_ALL_PACKAGES"
 )
 
-class MagiskRandomPackageName(context: Context) : IDetector(context) {
+class MagiskRandomPackageName(context: Context, override val name: String) : IDetector(context) {
 
-    override val name = "Random Package Name"
+    //override val name = "Random Package Name"
 
     private fun checkManifest(zFile: ZFile): Boolean {
         val manifestEntry = zFile.get("AndroidManifest.xml") ?: return false

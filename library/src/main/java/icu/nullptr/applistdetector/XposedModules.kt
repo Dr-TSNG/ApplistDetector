@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 
-class XposedModules(context: Context) : IDetector(context) {
+class XposedModules(context: Context, override val name: String) : IDetector(context) {
 
-    override val name = "Xposed Modules"
+    //override val name = "Xposed Modules"
 
     @SuppressLint("QueryPermissions OR PMCAPermissions Needed")
     override fun run(packages: Collection<String>?, detail: Detail?): Result {

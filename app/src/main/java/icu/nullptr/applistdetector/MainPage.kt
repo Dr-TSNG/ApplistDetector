@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import icu.nullptr.applistdetector.MyApplication.Companion.accList
 import icu.nullptr.applistdetector.MyApplication.Companion.accenable
 import icu.nullptr.applistdetector.MyApplication.Companion.appContext
+import icu.nullptr.applistdetector.MyApplication.Companion.titletext
 import icu.nullptr.applistdetector.component.CheckCard
 import icu.nullptr.applistdetector.component.IconHintCard
 import kotlinx.coroutines.*
@@ -29,20 +30,20 @@ val basicAppList = listOf(
 )
 
 val snapShotList = mutableStateListOf<Triple<IDetector, IDetector.Result?, Detail?>>(
-    Triple(AbnormalEnvironment(appContext,false), null, null),
-    Triple(AbnormalEnvironment(appContext,true), null, null),
+    Triple(AbnormalEnvironment(appContext,false,titletext[0]), null, null),
+    Triple(AbnormalEnvironment(appContext,true,"SuBusybox "+titletext[1]), null, null),
 
-    Triple(PMCommand(appContext), null, null),
-    Triple(PMConventionalAPIs(appContext), null, null),
-    Triple(PMSundryAPIs(appContext), null, null),
-    Triple(PMQueryIntentActivities(appContext), null, null),
+    Triple(PMCommand(appContext,titletext[2]), null, null),
+    Triple(PMConventionalAPIs(appContext,titletext[3]), null, null),
+    Triple(PMSundryAPIs(appContext,titletext[4]), null, null),
+    Triple(PMQueryIntentActivities(appContext,titletext[5]), null, null),
 
-    Triple(FileDetection(appContext, false), null, null),
-    Triple(FileDetection(appContext, true), null, null),
+    Triple(FileDetection(appContext, false,"Libc "+titletext[1]), null, null),
+    Triple(FileDetection(appContext, true,"Syscall "+titletext[1]), null, null),
 
-    Triple(XposedModules(appContext), null, null),
-    Triple(MagiskRandomPackageName(appContext), null, null),
-    Triple(Accessibility(appContext, accList = accList, accenable = accenable), null, null)
+    Triple(XposedModules(appContext,titletext[6]), null, null),
+    Triple(MagiskRandomPackageName(appContext,titletext[7]), null, null),
+    Triple(Accessibility(appContext, accList = accList, accenable = accenable,titletext[8]), null, null)
 )
 
 suspend fun runDetector(id: Int, packages: Collection<String>?) {
