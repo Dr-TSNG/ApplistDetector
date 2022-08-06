@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.EmojiObjects
@@ -35,14 +36,16 @@ class MainActivity : ComponentActivity() {
                 if (showDialog) AboutDialog { showDialog = false }
                 Scaffold(
                     topBar = { MainTopBar() },
-                    content = { MainPage() },
                     floatingActionButton = { MainFab { showDialog = true } },
-                )
+                ) { innerPadding ->
+                    MainPage(Modifier.padding(innerPadding))
+                }
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainTopBar() {
     CenterAlignedTopAppBar(

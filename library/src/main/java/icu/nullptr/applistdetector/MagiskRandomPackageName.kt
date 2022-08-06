@@ -5,54 +5,24 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import com.android.tools.build.apkzlib.zip.ZFile
-import pxb.android.axml.AxmlParser
 import java.io.File
-
-private val permissionList = arrayOf(
-    "android.permission.USE_BIOMETRIC",
-    "android.permission.USE_FINGERPRINT",
-    "com.android.launcher.permission.INSTALL_SHORTCUT",
-    "android.permission.REQUEST_INSTALL_PACKAGES",
-    "android.permission.QUERY_ALL_PACKAGES"
-)
 
 class MagiskRandomPackageName(context: Context) : IDetector(context) {
 
     override val name = "Random Package Name"
 
-    private fun checkManifest(zFile: ZFile): Boolean {
-        val manifestEntry = zFile.get("AndroidManifest.xml") ?: return false
-        var permissionMatch = 0
-        var launcherMatch = false
+    private val flags = PackageManager.GET_ACTIVITIES or PackageManager.GET_SERVICES or
+            PackageManager.GET_PROVIDERS or PackageManager.GET_RECEIVERS or
+            PackageManager.MATCH_DIRECT_BOOT_AWARE or PackageManager.MATCH_DIRECT_BOOT_UNAWARE
 
-        val parser = AxmlParser(manifestEntry.open().use { it.readBytes() })
-        var event = parser.next()
-        while (event != AxmlParser.END_FILE) {
-            if (event == AxmlParser.START_TAG) {
-                when (parser.name) {
-                    "uses-permission" -> {
-                        for (i in 0 until parser.attrCount) {
-                            if (parser.getAttrName(i) == "name") {
-                                if (parser.getAttrValue(i) in permissionList) permissionMatch++
-                                break
-                            }
-                        }
-                    }
-                    "category" -> {
-                        for (i in 0 until parser.attrCount) {
-                            if (parser.getAttrName(i) == "name") {
-                                if (parser.getAttrValue(i) == "android.intent.category.LAUNCHER") launcherMatch = true
-                                break
-                            }
-                        }
-                    }
-                }
+    private val stubInfo by lazy {
+        val archive = context.cacheDir.resolve("stub.apk")
+        context.assets.open("stub.apk").use { input ->
+            archive.outputStream().use { output ->
+                input.copyTo(output)
             }
-            event = parser.next()
         }
-
-        return permissionMatch == permissionList.size && launcherMatch
+        context.packageManager.getPackageArchiveInfo(archive.absolutePath, flags)!!
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -62,22 +32,20 @@ class MagiskRandomPackageName(context: Context) : IDetector(context) {
         val pm = context.packageManager
         val intent = Intent(Intent.ACTION_MAIN)
         for (pkg in pm.queryIntentActivities(intent, PackageManager.MATCH_ALL)) {
-            try {
-                val pInfo = pm.getPackageInfo(pkg.activityInfo.packageName, 0)
+            runCatching {
+                val pInfo = pm.getPackageInfo(pkg.activityInfo.packageName, flags)
                 val aInfo = pInfo.applicationInfo
-                if (aInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) continue
                 val apkFile = File(aInfo.sourceDir)
                 val apkSize = apkFile.length() / 1024
-                if (apkSize < 20 || apkSize > 30) continue
-                var traces = 0
-                ZFile.openReadOnly(apkFile).use {
-                    if (checkManifest(it)) traces++
-                }
-                if (traces == 1) {
-                    detail?.add(pkg.activityInfo.packageName to Result.FOUND)
-                    return Result.FOUND
-                }
-            } catch (e: Exception) {
+                if (apkSize < 20 || apkSize > 40) return@runCatching
+                if (aInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) return@runCatching
+                if (pInfo.activities.size != stubInfo.activities.size) return@runCatching
+                if (pInfo.services.size != stubInfo.services.size) return@runCatching
+                if (pInfo.receivers.size != stubInfo.receivers.size) return@runCatching
+                if (pInfo.providers.size != stubInfo.providers.size) return@runCatching
+                if (!pInfo.requestedPermissions.contentEquals(stubInfo.requestedPermissions)) return@runCatching
+                detail?.add(aInfo.packageName to Result.FOUND)
+                return Result.FOUND
             }
         }
         return Result.NOT_FOUND

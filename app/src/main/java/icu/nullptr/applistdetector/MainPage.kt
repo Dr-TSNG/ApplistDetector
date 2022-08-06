@@ -1,6 +1,7 @@
 package icu.nullptr.applistdetector
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -50,7 +51,7 @@ suspend fun runDetector(id: Int, packages: Collection<String>?) {
 }
 
 @Composable
-fun MainPage() {
+fun MainPage(modifier: Modifier) {
     LaunchedEffect(appContext) {
         runDetector(0, null)
         for (i in 1..6) runDetector(i, basicAppList)
@@ -59,7 +60,7 @@ fun MainPage() {
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally

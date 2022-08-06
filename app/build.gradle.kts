@@ -6,8 +6,6 @@ val targetSdkVer: Int by rootProject.extra
 val ndkVer: String by rootProject.extra
 val javaVer: JavaVersion by rootProject.extra
 
-val composeVersion = "1.2.0-alpha03"
-
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -53,7 +51,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = composeVersion
+        kotlinCompilerExtensionVersion = "1.2.0"
     }
 
     compileOptions {
@@ -69,12 +67,12 @@ android {
 dependencies {
     implementation(project(":library"))
 
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.activity:activity-compose:1.4.0")
-    implementation("androidx.compose.material:material-icons-extended:1.0.5")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha04")
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("com.google.android.material:material:1.5.0")
+    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.activity:activity-compose:1.5.1")
+    implementation("androidx.compose.material:material-icons-extended:1.2.0")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha15")
+    implementation("androidx.compose.ui:ui:1.2.0")
+    implementation("androidx.compose.ui:ui-tooling:1.2.0")
+    implementation("com.google.android.material:material:1.6.1")
     implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
 }
