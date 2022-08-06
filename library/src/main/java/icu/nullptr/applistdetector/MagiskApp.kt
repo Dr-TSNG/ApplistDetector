@@ -7,13 +7,14 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import java.io.File
 
-class MagiskRandomPackageName(context: Context) : IDetector(context) {
+class MagiskApp(context: Context) : IDetector(context) {
 
-    override val name = "Random Package Name"
+    override val name = "Magisk App"
 
     private val flags = PackageManager.GET_ACTIVITIES or PackageManager.GET_SERVICES or
             PackageManager.GET_PROVIDERS or PackageManager.GET_RECEIVERS or
-            PackageManager.MATCH_DIRECT_BOOT_AWARE or PackageManager.MATCH_DIRECT_BOOT_UNAWARE
+            PackageManager.MATCH_DIRECT_BOOT_AWARE or PackageManager.MATCH_DIRECT_BOOT_UNAWARE or
+            PackageManager.GET_PERMISSIONS
 
     private val stubInfo by lazy {
         val archive = context.cacheDir.resolve("stub.apk")
@@ -29,6 +30,7 @@ class MagiskRandomPackageName(context: Context) : IDetector(context) {
     override fun run(packages: Collection<String>?, detail: Detail?): Result {
         if (packages != null) throw IllegalArgumentException("packages should be null")
 
+        var result = Result.NOT_FOUND
         val pm = context.packageManager
         val intent = Intent(Intent.ACTION_MAIN)
         for (pkg in pm.queryIntentActivities(intent, PackageManager.MATCH_ALL)) {
@@ -37,17 +39,20 @@ class MagiskRandomPackageName(context: Context) : IDetector(context) {
                 val aInfo = pInfo.applicationInfo
                 val apkFile = File(aInfo.sourceDir)
                 val apkSize = apkFile.length() / 1024
-                if (apkSize < 20 || apkSize > 40) return@runCatching
+                if (apkSize !in 20..40 && apkSize !in 9 * 1024..20 * 1024) return@runCatching
                 if (aInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) return@runCatching
                 if (pInfo.activities.size != stubInfo.activities.size) return@runCatching
                 if (pInfo.services.size != stubInfo.services.size) return@runCatching
                 if (pInfo.receivers.size != stubInfo.receivers.size) return@runCatching
                 if (pInfo.providers.size != stubInfo.providers.size) return@runCatching
-                if (!pInfo.requestedPermissions.contentEquals(stubInfo.requestedPermissions)) return@runCatching
+                val pPermissionSet = pInfo.requestedPermissions.toSet()
+                val stubPermissionSet = stubInfo.requestedPermissions.toMutableSet()
+                stubPermissionSet.remove("com.android.launcher.permission.INSTALL_SHORTCUT")
+                if (!pPermissionSet.containsAll(stubPermissionSet)) return@runCatching
                 detail?.add(aInfo.packageName to Result.FOUND)
-                return Result.FOUND
+                result = Result.FOUND
             }
         }
-        return Result.NOT_FOUND
+        return result
     }
 }
