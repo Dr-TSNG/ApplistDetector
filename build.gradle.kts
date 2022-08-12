@@ -5,7 +5,7 @@ buildscript {
         maven("https://jitpack.io")
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.2.1")
+        classpath("com.android.tools.build:gradle:7.2.2")
     }
 }
 
@@ -24,10 +24,11 @@ fun String.execute(currentWorkingDir: File = file("./")): String {
 }
 
 val verCode by extra("git rev-list HEAD --count".execute().toInt())
-var verName by extra("2.3")
+var verName by extra("2.4")
 
 val minSdkVer by extra(23)
-val targetSdkVer by extra(33)
+val targetSdkVer by extra(29)
+val compileSdkVer by extra(33)
 val ndkVer by extra("25.0.8775105")
 val javaVer by extra(JavaVersion.VERSION_11)
 

@@ -4,7 +4,6 @@ APP_CFLAGS     += -Wno-builtin-macro-redefined -D__FILE__=__FILE_NAME__
 APP_CPPFLAGS   := -std=c++2a
 APP_CONLYFLAGS := -std=c18
 APP_LDFLAGS    := -Wl,--exclude-libs,ALL
-APP_STL        := none
 
 ifneq ($(NDK_DEBUG),1)
 APP_CFLAGS     += -Oz -flto

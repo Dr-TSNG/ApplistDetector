@@ -3,26 +3,23 @@
 #include <linux_syscall_support.h>
 #include <sys/stat.h>
 
-namespace {
+volatile bool syscallFailed;
 
-    bool syscallFailed;
+enum Result {
+    NOT_FOUND, METHOD_UNAVAILABLE, SUSPICIOUS, FOUND
+} result;
 
-    enum Result {
-        NOT_FOUND, METHOD_UNAVAILABLE, SUSPICIOUS, FOUND
-    } result;
+void SignalHandler(int) {
+    syscallFailed = true;
+}
 
-    void SignalHandler(int) {
-        syscallFailed = true;
-    }
+void UpdateResult(Result out) {
+    result = std::max(result, out);
+}
 
-    void UpdateResult(Result out) {
-        result = std::max(result, out);
-    }
-
-    void SyscallDetect(int call) {
-        UpdateResult(syscallFailed ? METHOD_UNAVAILABLE : (call == 0 ? FOUND : NOT_FOUND));
-        syscallFailed = false;
-    }
+void SyscallDetect(int call) {
+    UpdateResult(syscallFailed ? METHOD_UNAVAILABLE : (call == 0 || errno == EPERM ? FOUND : NOT_FOUND));
+    syscallFailed = false;
 }
 
 void FileDetection(const char* path, jboolean useSyscall) {
@@ -30,11 +27,9 @@ void FileDetection(const char* path, jboolean useSyscall) {
     result = NOT_FOUND;
     if (useSyscall) {
         signal(SIGSYS, SignalHandler);
-        struct kernel_stat buf{};
-        SyscallDetect(sys_stat(path, &buf));
-        SyscallDetect(sys_fstat(sys_open(path, O_PATH, 0), &buf));
+        SyscallDetect(syscall(SYS_faccessat, AT_FDCWD, path, 0));
     } else {
-        struct stat buf{};
+        struct stat buf {};
         UpdateResult(access(path, F_OK) == 0 ? FOUND : NOT_FOUND);
         UpdateResult(stat(path, &buf) == 0 ? FOUND : NOT_FOUND);
         UpdateResult(fstat(open(path, O_PATH), &buf) == 0 ? FOUND : NOT_FOUND);
